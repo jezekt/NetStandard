@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JezekT.NetStandard.Pagination\JezekT.NetStandard.Pagination.csproj" />
+    <ProjectReference Include="..\JezekT.NetStandard.Validation\JezekT.NetStandard.Validation.csproj" />
+  </ItemGroup>
+
+</Project>
