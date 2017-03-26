@@ -3,19 +3,16 @@ using JezekT.NetStandard.Data;
 
 namespace JezekT.NetStandard.Pagination.DataProviders
 {
-    public interface IPaginationDataProvider
+    public interface IPaginationDataProvider<TEntity, TItem, in TId>
+        where TEntity : class, IWithId<TId>
+        where TItem : class
     {
-        Task<IPaginationData> GetPaginationDataAsync(string term, int start, int pageSize, string orderField, string orderDirection);
+        Task<IPaginationData<TItem>> GetPaginationDataAsync(int start, int pageSize, string term = null, string orderField = null,
+            string orderDirection = null, TId[] inputFilterIds = null, TId[] skipIds = null);
+
+        Task<IPaginationData<TItem>> GetPaginationDataAsync<TTemplate>(int start, int pageSize, string term = null, string orderField = null,
+            string orderDirection = null, TId[] inputFilterIds = null, TId[] skipIds = null) 
+            where TTemplate : IPaginationTemplate<TEntity, TItem>;
+
     }
-
-    public interface IPaginationDataProvider<TEntity, in TId> : IPaginationDataProvider<TId> where TEntity : class, IWithId<TId>
-    {
-    }
-
-    public interface IPaginationDataProvider<in TId>
-    {
-        Task<IPaginationData> GetPaginationDataAsync(string term, int start, int pageSize, string orderField, string orderDirection, TId[] inputFiletrIds = null);
-    }
-
-
 }

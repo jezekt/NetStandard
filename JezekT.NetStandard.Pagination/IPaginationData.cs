@@ -1,8 +1,8 @@
 ﻿namespace JezekT.NetStandard.Pagination
 {
-    public interface IPaginationData
+    public interface IPaginationData<T> where T : class 
     {
-        object[] Items { get; set; }
+        T[] Items { get; set; }
         int RecordsTotal { get; set; }
         int RecordsFiltered { get; set; }
     }

@@ -1,8 +1,9 @@
 ﻿namespace JezekT.NetStandard.Pagination
 {
-    public class PaginationResponse : IPaginationData
+    public class PaginationResponse<T> : IPaginationData<T>
+        where T : class 
     {
-        public object[] Items { get; set; }
+        public T[] Items { get; set; }
         public int RecordsTotal { get; set; }
         public int RecordsFiltered { get; set; }
     }
