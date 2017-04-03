@@ -1,54 +1,61 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using JezekT.NetStandard.Data.DataProviders;
+using JezekT.NetStandard.Data.EntityOperations;
 
 namespace JezekT.NetStandard.Data.EntityFrameworkCore.DataProviders
 {
-    public abstract class RepositoryBase<TEntity, TId, TContext> 
+    public abstract class RepositoryBase<TEntity, TId> 
         where TEntity : class, IWithId<TId>
-        where TContext : DbContext
     {
-        protected TContext DbContext { get; }
+        private readonly IProvideItemById<TEntity, TId> _entityByIdProvider;
+        private readonly IProvideItemByIdWithIncludes<TEntity, TId> _entityWithIncludesByIdProvider;
+        private readonly ICreateEntity<TEntity> _entityCreator;
+        private readonly IUpdateEntity<TEntity> _entityUpdater;
+        private readonly IDeleteEntity<TEntity, TId> _entityDestroyer;
 
 
         public virtual async Task<TEntity> GetByIdAsync(TId id)
         {
-            return await DbContext.Set<TEntity>().FindAsync(id);
+            return await _entityByIdProvider.GetByIdAsync(id);
         }
-        
+
+        public virtual async Task<TEntity> GetByIdAsync(TId id, Expression<Func<TEntity, object>>[] includes)
+        {
+            return await _entityWithIncludesByIdProvider.GetByIdAsync(id, includes);
+        }
+
+
         public virtual void Create(TEntity obj)
         {
-            if (obj == null) throw new ArgumentNullException();
-            Contract.EndContractBlock();
-
-            DbContext.Set<TEntity>().Add(obj);
+            _entityCreator.Create(obj);
         }
 
         public virtual void Update(TEntity obj)
         {
-            if (obj == null) throw new ArgumentNullException();
-            Contract.EndContractBlock();
-
-            DbContext.Attach(obj);
-            var entry = DbContext.Entry(obj);
-            entry.State = EntityState.Modified;
+            _entityUpdater.Update(obj);
         }
 
         public virtual void DeleteById(TId id)
         {
-            var objToRemove = DbContext.Set<TEntity>().Find(id);
-            if (objToRemove == null) throw new InvalidOperationException();
-            DbContext.Set<TEntity>().Remove(objToRemove);
+            _entityDestroyer.DeleteById(id);
         }
 
 
-        protected RepositoryBase(TContext dbContext)
+        protected RepositoryBase(IProvideItemById<TEntity, TId> entityByIdProvider, IProvideItemByIdWithIncludes<TEntity, TId> entityWithIncludesByIdProvider,
+            ICreateEntity<TEntity> entityCreator, IUpdateEntity<TEntity> entityUpdater, IDeleteEntity<TEntity, TId> entityDestroyer)
         {
-            if (dbContext == null) throw new ArgumentNullException();
+            if (entityByIdProvider == null || entityWithIncludesByIdProvider == null || entityCreator == null ||
+                entityUpdater == null || entityDestroyer == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
-            DbContext = dbContext;
+            _entityByIdProvider = entityByIdProvider;
+            _entityWithIncludesByIdProvider = entityWithIncludesByIdProvider;
+            _entityCreator = entityCreator;
+            _entityUpdater = entityUpdater;
+            _entityDestroyer = entityDestroyer;
         }
 
     }

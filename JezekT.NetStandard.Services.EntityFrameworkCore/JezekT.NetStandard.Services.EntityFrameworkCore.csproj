@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\JezekT.NetStandard.Data\JezekT.NetStandard.Data.csproj" />
     <ProjectReference Include="..\JezekT.NetStandard.Pagination\JezekT.NetStandard.Pagination.csproj" />
+    <ProjectReference Include="..\JezekT.NetStandard.Services\JezekT.NetStandard.Services.csproj" />
     <ProjectReference Include="..\JezekT.NetStandard.Validation\JezekT.NetStandard.Validation.csproj" />
   </ItemGroup>
 

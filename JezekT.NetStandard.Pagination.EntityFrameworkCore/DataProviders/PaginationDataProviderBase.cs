@@ -40,7 +40,7 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
         }
         
         
-        protected async Task<IPaginationData<TItem>> GetPaginationResponseAsync(Expression<Func<TEntity, TItem>> selector, int start, int pageSize, 
+        private async Task<IPaginationData<TItem>> GetPaginationResponseAsync(Expression<Func<TEntity, TItem>> selector, int start, int pageSize, 
             string orderField = null, string orderDirection = null, TId[] inputFilterIds = null, TId[] skipIds = null, Expression<Func<TEntity, bool>> searchTermExpression = null)
         {
             if (inputFilterIds != null)
@@ -60,9 +60,15 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
             }
 
             var totalCount = await BaseQuery.CountAsync();
-            var response = await GetResponseAsync(start, pageSize, totalCount, orderField, orderDirection, query, selector);
+            var response = await GetPaginationResponseAsync(start, pageSize, totalCount, orderField, orderDirection, query, selector);
             return response;
         }
+
+        protected virtual IOrderedQueryable<TEntity> GetOrderedQueryable(string orderField, string orderDirection, IQueryable<TEntity> query)
+        {
+            return query.OrderBy(orderField, orderDirection);
+        }
+
 
 
         protected PaginationDataProviderBase(TContext dbContext)
@@ -74,11 +80,11 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
         }
 
 
-        private async Task<IPaginationData<TItem>> GetResponseAsync(int start, int pageSize, int totalCount, string orderField, string orderDirection, IQueryable<TEntity> query, Expression<Func<TEntity, TItem>> selector)
+        private async Task<IPaginationData<TItem>> GetPaginationResponseAsync(int start, int pageSize, int totalCount, string orderField, string orderDirection, IQueryable<TEntity> query, Expression<Func<TEntity, TItem>> selector)
         {
             if (!string.IsNullOrEmpty(orderField))
             {
-                query = query.OrderBy(orderField, orderDirection);
+                query = GetOrderedQueryable(orderField, orderDirection, query);
             }
 
             var items = await query.Skip(start).Take(pageSize).Select(selector).ToArrayAsync();
@@ -91,5 +97,7 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
                 RecordsFiltered = count
             };
         }
+
+
     }
 }

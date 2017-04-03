@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace JezekT.NetStandard.Data.Repository
+namespace JezekT.NetStandard.Data.DataProviders.Repository
 {
     public interface IUnitOfWork
     {

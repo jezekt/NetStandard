@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
-using JezekT.NetStandard.Data.Repository;
+using JezekT.NetStandard.Data.DataProviders.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace JezekT.NetStandard.Data.EntityFrameworkCore
