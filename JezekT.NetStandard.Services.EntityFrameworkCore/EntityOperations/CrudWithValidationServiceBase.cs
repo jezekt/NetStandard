@@ -42,7 +42,7 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
         }
 
 
-        public async Task<bool> CreateAsync(TEntity obj)
+        public virtual async Task<bool> CreateAsync(TEntity obj)
         {
             if (obj == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
@@ -55,7 +55,7 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
             return result;
         }
 
-        public async Task<bool> UpdateAsync(TEntity obj)
+        public virtual async Task<bool> UpdateAsync(TEntity obj)
         {
             if (obj == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
