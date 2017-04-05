@@ -68,8 +68,7 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
         {
             return query.OrderBy(orderField, orderDirection);
         }
-
-
+        
 
         protected PaginationDataProviderBase(TContext dbContext)
         {
@@ -87,7 +86,7 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
                 query = GetOrderedQueryable(orderField, orderDirection, query);
             }
 
-            var items = await query.Skip(start).Take(pageSize).Select(selector).ToArrayAsync();
+            var items = await query.Select(selector).Skip(start).Take(pageSize).ToArrayAsync();
             var count = await query.CountAsync();
 
             return new PaginationResponse<TItem>
