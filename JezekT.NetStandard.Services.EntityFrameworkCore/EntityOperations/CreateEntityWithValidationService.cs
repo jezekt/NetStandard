@@ -7,6 +7,7 @@ using JezekT.NetStandard.Services.EntityFrameworkCore.Resources;
 using JezekT.NetStandard.Services.EntityOperations;
 using JezekT.NetStandard.Validation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
 {
@@ -15,6 +16,7 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
     {
         private readonly ICreateEntity<TEntity> _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<CreateEntityWithValidationService<TEntity>> _logger;
 
         
         public async Task<bool> CreateAsync(TEntity obj)
@@ -31,15 +33,17 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
                     return true;
                 }
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
                 ExceptionMessage = ResourcesSettings.CreateErrorMessage;
+                _logger?.LogError(ex.Message);
             }
             return false;
         }
 
 
-        public CreateEntityWithValidationService(ICreateEntity<TEntity> repository, IUnitOfWork unitOfWork, IValidation<TEntity> validation = null)
+        public CreateEntityWithValidationService(ICreateEntity<TEntity> repository, IUnitOfWork unitOfWork, IValidation<TEntity> validation = null, 
+            ILogger<CreateEntityWithValidationService<TEntity>> logger = null)
             : base(validation)
         {
             if (repository == null || unitOfWork == null) throw new ArgumentNullException();
@@ -47,6 +51,7 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
 
             _repository = repository;
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
     }

@@ -7,6 +7,7 @@ using JezekT.NetStandard.Services.EntityFrameworkCore.Resources;
 using JezekT.NetStandard.Services.EntityOperations;
 using JezekT.NetStandard.Validation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
 {
@@ -15,6 +16,7 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
     {
         private readonly IDeleteEntity<TEntity, TId> _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<DeleteEntityWithValidationService<TEntity, TId>> _logger;
 
 
         public async Task<bool> DeleteByIdAsync(TId id)
@@ -25,19 +27,22 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
                 await _unitOfWork.SaveChangesAsync();
                 return true;
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
                 ExceptionMessage = ResourcesSettings.DeleteErrorMessage;
+                _logger?.LogError(ex.Message);
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
                 ExceptionMessage = ResourcesSettings.InvalidOperationMessage;
+                _logger?.LogError(ex.Message);
             }
             return false;
         }
 
 
-        public DeleteEntityWithValidationService(IDeleteEntity<TEntity, TId> repository, IUnitOfWork unitOfWork, IValidation<TEntity> validation = null)
+        public DeleteEntityWithValidationService(IDeleteEntity<TEntity, TId> repository, IUnitOfWork unitOfWork, IValidation<TEntity> validation = null, 
+            ILogger<DeleteEntityWithValidationService<TEntity, TId>> logger = null)
             : base(validation)
         {
             if (repository == null || unitOfWork == null) throw new ArgumentNullException();
@@ -45,6 +50,7 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
 
             _repository = repository;
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
     }
 }

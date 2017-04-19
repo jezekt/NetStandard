@@ -7,6 +7,7 @@ using JezekT.NetStandard.Data.EntityOperations;
 using JezekT.NetStandard.Services.EntityFrameworkCore.Resources;
 using JezekT.NetStandard.Services.EntityOperations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
 {
@@ -15,6 +16,7 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
     {
         private readonly IDeleteAssociationClassEntity<TEntity, FirstId, SecondId> _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<DeleteAssociationClassEntityWithValidationService<TEntity, FirstId, SecondId>> _logger;
 
         public async Task<bool> DeleteByIdsAsync(FirstId firstObjId, SecondId secondObjId)
         {
@@ -24,26 +26,30 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
                 await _unitOfWork.SaveChangesAsync();
                 return true;
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
                 ExceptionMessage = ResourcesSettings.DeleteErrorMessage;
+                _logger?.LogError(ex.Message);
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
                 ExceptionMessage = ResourcesSettings.InvalidOperationMessage;
+                _logger?.LogError(ex.Message);
             }
             return false;
         }
 
 
         public DeleteAssociationClassEntityWithValidationService(
-            IDeleteAssociationClassEntity<TEntity, FirstId, SecondId> repository, IUnitOfWork unitOfWork)
+            IDeleteAssociationClassEntity<TEntity, FirstId, SecondId> repository, IUnitOfWork unitOfWork, 
+            ILogger<DeleteAssociationClassEntityWithValidationService<TEntity, FirstId, SecondId>> logger = null)
         {
             if (repository == null || unitOfWork == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _repository = repository;
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
     }
 }
