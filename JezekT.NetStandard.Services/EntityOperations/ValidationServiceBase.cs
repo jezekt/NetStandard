@@ -2,9 +2,9 @@
 using System.Linq;
 using JezekT.NetStandard.Validation;
 
-namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
+namespace JezekT.NetStandard.Services.EntityOperations
 {
-    public abstract class ValidationBase<TEntity>
+    public abstract class ValidationServiceBase<TEntity>
         where TEntity : class
     {
         protected readonly IValidation<TEntity> Validation;
@@ -15,7 +15,7 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
             {
                 if (Validation == null) return false;
                 var errors = Validation.GetValidationErrors();
-                return errors != null && errors.Any();
+                return errors != null && Enumerable.Any<KeyValuePair<string, string>>(errors);
             }
         }
 
@@ -26,7 +26,7 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
         }
 
 
-        protected ValidationBase(IValidation<TEntity> validation = null)
+        protected ValidationServiceBase(IValidation<TEntity> validation = null)
         {
             Validation = validation;
         }

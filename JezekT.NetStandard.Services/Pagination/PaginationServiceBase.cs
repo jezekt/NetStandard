@@ -5,7 +5,7 @@ using JezekT.NetStandard.Data;
 using JezekT.NetStandard.Pagination;
 using JezekT.NetStandard.Pagination.DataProviders;
 
-namespace JezekT.NetStandard.Services.EntityFrameworkCore.Pagination
+namespace JezekT.NetStandard.Services.Pagination
 {
     public abstract class PaginationServiceBase<TEntity, TItem, TId> 
         where TEntity : class, IWithId<TId>

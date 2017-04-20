@@ -78,6 +78,14 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
             BaseQuery = dbContext.Set<TEntity>();
         }
 
+        protected PaginationDataProviderBase(IQueryable<TEntity> baseQuery)
+        {
+            if (baseQuery == null) throw new ArgumentNullException();
+            Contract.EndContractBlock();
+
+            BaseQuery = baseQuery;
+        }
+
 
         private async Task<IPaginationData<TItem>> GetPaginationResponseAsync(int start, int pageSize, int totalCount, string orderField, string orderDirection, IQueryable<TEntity> query, Expression<Func<TEntity, TItem>> selector)
         {

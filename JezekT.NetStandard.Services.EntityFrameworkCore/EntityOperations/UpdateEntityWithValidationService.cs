@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
 {
-    public class UpdateEntityWithValidationService<TEntity> : ValidationBase<TEntity>, IUpdateEntityWithValidation<TEntity>
+    public class UpdateEntityWithValidationService<TEntity> : ValidationServiceBase<TEntity>, IUpdateEntityWithValidation<TEntity>
         where TEntity : class 
     {
         private readonly IUpdateEntity<TEntity> _repository;

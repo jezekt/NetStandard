@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace JezekT.NetStandard.Services.EntityFrameworkCore.Extensions
+namespace JezekT.NetStandard.Services.Extensions
 {
     public static class ServiceErrorsProviderExtensions
     {

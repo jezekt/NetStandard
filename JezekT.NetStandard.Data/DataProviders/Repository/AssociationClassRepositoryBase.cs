@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
-using JezekT.NetStandard.Data.DataProviders;
 using JezekT.NetStandard.Data.EntityOperations;
 
-namespace JezekT.NetStandard.Data.EntityFrameworkCore.DataProviders
+namespace JezekT.NetStandard.Data.DataProviders.Repository
 {
     public abstract class AssociationClassRepositoryBase<TEntity, FirstId, SecondId> 
         where TEntity : class, IAssociationClass<FirstId, SecondId>

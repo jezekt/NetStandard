@@ -2,9 +2,8 @@
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using JezekT.NetStandard.Data;
-using JezekT.NetStandard.Services.DataProviders;
 
-namespace JezekT.NetStandard.Services.EntityFrameworkCore.DataProviders
+namespace JezekT.NetStandard.Services.DataProviders
 {
     public class AssociationClassEntityProvider<TEntity, FirstId, SecondId> : IProvideAssociationClassItemByIds<TEntity, FirstId, SecondId>
         where TEntity : class, IAssociationClass<FirstId, SecondId>

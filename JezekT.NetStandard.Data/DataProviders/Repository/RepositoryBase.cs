@@ -2,10 +2,9 @@
 using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using JezekT.NetStandard.Data.DataProviders;
 using JezekT.NetStandard.Data.EntityOperations;
 
-namespace JezekT.NetStandard.Data.EntityFrameworkCore.DataProviders
+namespace JezekT.NetStandard.Data.DataProviders.Repository
 {
     public abstract class RepositoryBase<TEntity, TId> 
         where TEntity : class, IWithId<TId>

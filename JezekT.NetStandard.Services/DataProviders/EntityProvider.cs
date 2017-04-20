@@ -2,9 +2,8 @@
 using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using JezekT.NetStandard.Services.DataProviders;
 
-namespace JezekT.NetStandard.Services.EntityFrameworkCore.DataProviders
+namespace JezekT.NetStandard.Services.DataProviders
 {
     public class EntityProvider<TEntity, TId> : IProvideItemById<TEntity, TId>, IProvideItemByIdWithIncludes<TEntity, TId> 
         where TEntity : class

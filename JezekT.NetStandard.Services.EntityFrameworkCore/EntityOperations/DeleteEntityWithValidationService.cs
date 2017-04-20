@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
 {
-    public class DeleteEntityWithValidationService<TEntity, TId> : ValidationBase<TEntity>, IDeleteEntityWithValidation<TEntity, TId>
+    public class DeleteEntityWithValidationService<TEntity, TId> : ValidationServiceBase<TEntity>, IDeleteEntityWithValidation<TEntity, TId>
         where TEntity : class
     {
         private readonly IDeleteEntity<TEntity, TId> _repository;
