@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
 {
     public abstract class PaginationDataProviderBase<TEntity, TId, TContext, TItem> 
-        where TEntity : class, IWithId<TId>
+        where TEntity : class
         where TContext : DbContext
         where TItem : class
     {
@@ -38,19 +38,40 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
             var template = Activator.CreateInstance<TTemplate>();
             return await GetPaginationResponseAsync(template.GetSelector(), start, pageSize, orderField, orderDirection, inputFilterIds, skipIds, template.GetSearchTermExpression(term));
         }
-        
-        
-        private async Task<IPaginationData<TItem>> GetPaginationResponseAsync(Expression<Func<TEntity, TItem>> selector, int start, int pageSize, 
-            string orderField = null, string orderDirection = null, TId[] inputFilterIds = null, TId[] skipIds = null, Expression<Func<TEntity, bool>> searchTermExpression = null)
+
+        public async Task<IPaginationData<TItem>> GetPaginationDataAsync(int start, int pageSize, string term = null, string orderField = null,
+            string orderDirection = null, Expression<Func<TEntity, bool>> inputFilterIdsExpression = null, Expression<Func<TEntity, bool>> skipIdsExpression = null)
         {
-            if (inputFilterIds != null)
+            if (DefaultPaginationTemplate == null)
             {
-                BaseQuery = BaseQuery.Where(x => inputFilterIds.Contains(x.Id));
+                throw new NotImplementedException();
             }
 
-            if (skipIds != null)
+            return await GetPaginationResponseAsync(DefaultPaginationTemplate.GetSelector(), start, pageSize, orderField, orderDirection,
+                inputFilterIdsExpression, skipIdsExpression, DefaultPaginationTemplate.GetSearchTermExpression(term));
+        }
+
+        public async Task<IPaginationData<TItem>> GetPaginationDataAsync<TTemplate>(int start, int pageSize, string term = null, string orderField = null,
+            string orderDirection = null, Expression<Func<TEntity, bool>> inputFilterIdsExpression = null, Expression<Func<TEntity, bool>> skipIdsExpression = null)
+            where TTemplate : IPaginationTemplate<TEntity, TItem>
+        {
+            var template = Activator.CreateInstance<TTemplate>();
+            return await GetPaginationResponseAsync(template.GetSelector(), start, pageSize, orderField, orderDirection, inputFilterIdsExpression, skipIdsExpression, template.GetSearchTermExpression(term));
+        }
+
+        
+        public async Task<IPaginationData<TItem>> GetPaginationResponseAsync(Expression<Func<TEntity, TItem>> selector, int start, int pageSize, string orderField = null,
+            string orderDirection = null, Expression<Func<TEntity, bool>> inputFilterIdsExpression = null, Expression<Func<TEntity, bool>> skipIdsExpression = null,
+            Expression<Func<TEntity, bool>> searchTermExpression = null)
+        {
+            if (inputFilterIdsExpression != null)
             {
-                BaseQuery = BaseQuery.Where(x => !skipIds.Contains(x.Id));
+                BaseQuery = BaseQuery.Where(inputFilterIdsExpression);
+            }
+
+            if (skipIdsExpression != null)
+            {
+                BaseQuery = BaseQuery.Where(skipIdsExpression);
             }
 
             var query = BaseQuery;
@@ -63,6 +84,7 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
             var response = await GetPaginationResponseAsync(start, pageSize, totalCount, orderField, orderDirection, query, selector);
             return response;
         }
+
 
         protected virtual IOrderedQueryable<TEntity> GetOrderedQueryable(string orderField, string orderDirection, IQueryable<TEntity> query)
         {
@@ -87,6 +109,30 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
         }
 
 
+        private async Task<IPaginationData<TItem>> GetPaginationResponseAsync(Expression<Func<TEntity, TItem>> selector, int start, int pageSize,
+            string orderField = null, string orderDirection = null, TId[] inputFilterIds = null, TId[] skipIds = null, Expression<Func<TEntity, bool>> searchTermExpression = null)
+        {
+            Expression<Func<TEntity, bool>> inputFilterIdsExpression = null;
+            if (inputFilterIds != null)
+            {
+                if (typeof(TEntity) == typeof(IWithId<TId>))
+                {
+                    inputFilterIdsExpression = x => inputFilterIds.Contains(((IWithId<TId>)x).Id);
+                }
+            }
+
+            Expression<Func<TEntity, bool>> skipIdsExpression = null;
+            if (skipIds != null)
+            {
+                if (typeof(TEntity) == typeof(IWithId<TId>))
+                {
+                    skipIdsExpression = x => !skipIds.Contains(((IWithId<TId>)x).Id);
+                }
+            }
+
+            return await GetPaginationResponseAsync(selector, start, pageSize, orderField, orderDirection, inputFilterIdsExpression, skipIdsExpression, searchTermExpression);
+        }
+        
         private async Task<IPaginationData<TItem>> GetPaginationResponseAsync(int start, int pageSize, int totalCount, string orderField, string orderDirection, IQueryable<TEntity> query, Expression<Func<TEntity, TItem>> selector)
         {
             if (!string.IsNullOrEmpty(orderField))
@@ -104,7 +150,6 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
                 RecordsFiltered = count
             };
         }
-
-
+        
     }
 }
