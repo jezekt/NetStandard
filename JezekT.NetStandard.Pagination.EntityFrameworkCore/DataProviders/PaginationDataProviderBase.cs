@@ -7,6 +7,7 @@ using JezekT.NetStandard.Data;
 using JezekT.NetStandard.Pagination.DataProviders;
 using JezekT.NetStandard.Pagination.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
 {
@@ -15,9 +16,12 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
         where TContext : DbContext
         where TItem : class
     {
+        private readonly ILogger _logger;
+
+
         protected IQueryable<TEntity> BaseQuery { get; private set; }
         protected abstract IPaginationTemplate<TEntity, TItem> DefaultPaginationTemplate { get; }
-
+        
 
         public async Task<IPaginationData<TItem>> GetPaginationDataAsync(int start, int pageSize, string term = null, string orderField = null,
             string orderDirection = null, TId[] inputFilterIds = null, TId[] skipIds = null)
@@ -80,9 +84,17 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
                 query = query.Where(searchTermExpression);
             }
 
-            var totalCount = await BaseQuery.CountAsync();
-            var response = await GetPaginationResponseAsync(start, pageSize, totalCount, orderField, orderDirection, query, selector);
-            return response;
+            try
+            {
+                var totalCount = await BaseQuery.CountAsync();
+                var response = await GetPaginationResponseAsync(start, pageSize, totalCount, orderField, orderDirection, query, selector);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.GetBaseException()?.Message?? ex.Message);
+                throw;
+            }
         }
 
 
@@ -92,20 +104,22 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
         }
         
 
-        protected PaginationDataProviderBase(TContext dbContext)
+        protected PaginationDataProviderBase(TContext dbContext, ILogger logger = null)
         {
             if (dbContext == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             BaseQuery = dbContext.Set<TEntity>();
+            _logger = logger;
         }
 
-        protected PaginationDataProviderBase(IQueryable<TEntity> baseQuery)
+        protected PaginationDataProviderBase(IQueryable<TEntity> baseQuery, ILogger logger = null)
         {
             if (baseQuery == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             BaseQuery = baseQuery;
+            _logger = logger;
         }
 
 
