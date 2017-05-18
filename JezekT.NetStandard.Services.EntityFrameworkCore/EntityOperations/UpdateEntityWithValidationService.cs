@@ -3,7 +3,6 @@ using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using JezekT.NetStandard.Data.DataProviders.Repository;
 using JezekT.NetStandard.Data.EntityOperations;
-using JezekT.NetStandard.Services.EntityFrameworkCore.Resources;
 using JezekT.NetStandard.Services.EntityOperations;
 using JezekT.NetStandard.Validation;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +34,7 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
             }
             catch (DbUpdateException ex)
             {
-                ExceptionMessage = ResourcesSettings.EditErrorMessage;
+                ExceptionMessage = Properties.Resources.EditErrorMessage;
                 _logger?.LogError(ex.Message);
             }
             return false;

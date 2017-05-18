@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using JezekT.NetStandard.Data;
 using JezekT.NetStandard.Data.DataProviders.Repository;
 using JezekT.NetStandard.Data.EntityOperations;
-using JezekT.NetStandard.Services.EntityFrameworkCore.Resources;
 using JezekT.NetStandard.Services.EntityOperations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -28,12 +27,12 @@ namespace JezekT.NetStandard.Services.EntityFrameworkCore.EntityOperations
             }
             catch (DbUpdateException ex)
             {
-                ExceptionMessage = ResourcesSettings.DeleteErrorMessage;
+                ExceptionMessage = Properties.Resources.DeleteErrorMessage;
                 _logger?.LogError(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                ExceptionMessage = ResourcesSettings.InvalidOperationMessage;
+                ExceptionMessage = Properties.Resources.InvalidOperationMessage;
                 _logger?.LogError(ex.Message);
             }
             return false;
