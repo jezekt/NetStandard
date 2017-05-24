@@ -92,7 +92,7 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.GetBaseException()?.Message?? ex.Message);
+                _logger?.LogError(ex.GetBaseException()?.Message?? ex.Message);
                 throw;
             }
         }
