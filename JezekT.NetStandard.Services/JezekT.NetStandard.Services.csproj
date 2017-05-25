@@ -2,11 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
+    <Version>1.0.0-beta</Version>
+    <Authors>Tomas Jezek</Authors>
+    <Company>JezekT</Company>
+    <Description>Common types and interfaces for Service layer</Description>
+    <PackageProjectUrl>https://github.com/jezekt/NetStandard/tree/master/JezekT.NetStandard.Services</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/jezekt/NetStandard/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/jezekt/NetStandard</RepositoryUrl>
+    <PackageTags>servicelayer netstandard</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JezekT.NetStandard.Pagination\JezekT.NetStandard.Pagination.csproj" />
-    <ProjectReference Include="..\JezekT.NetStandard.Validation\JezekT.NetStandard.Validation.csproj" />
+    <PackageReference Include="JezekT.NetStandard.Pagination" Version="1.0.0-beta" />
+    <PackageReference Include="JezekT.NetStandard.Validation" Version="1.0.0-beta" />
   </ItemGroup>
 
 </Project>
