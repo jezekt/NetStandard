@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
+    <Authors>Tomas Jezek</Authors>
+    <Company>JezekT</Company>
+    <Description>Common types and interfaces for Data layer</Description>
+    <RepositoryUrl>https://github.com/jezekt/NetStandard</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/jezekt/NetStandard/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/jezekt/NetStandard/tree/master/JezekT.NetStandard.Data</PackageProjectUrl>
+    <PackageTags>datalayer netstandard</PackageTags>
+    <Version>1.0.0-beta</Version>
   </PropertyGroup>
 
   <ItemGroup>
