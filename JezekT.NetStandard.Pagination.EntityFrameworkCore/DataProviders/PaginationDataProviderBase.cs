@@ -2,6 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using JezekT.NetStandard.Data;
 using JezekT.NetStandard.Pagination.DataProviders;
@@ -129,7 +130,7 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
             Expression<Func<TEntity, bool>> inputFilterIdsExpression = null;
             if (inputFilterIds != null)
             {
-                if (typeof(TEntity) == typeof(IWithId<TId>))
+                if (typeof(IWithId<TId>).GetTypeInfo().IsAssignableFrom(typeof(TEntity).GetTypeInfo()))
                 {
                     inputFilterIdsExpression = x => inputFilterIds.Contains(((IWithId<TId>)x).Id);
                 }
@@ -138,7 +139,7 @@ namespace JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders
             Expression<Func<TEntity, bool>> skipIdsExpression = null;
             if (skipIds != null)
             {
-                if (typeof(TEntity) == typeof(IWithId<TId>))
+                if (typeof(IWithId<TId>).GetTypeInfo().IsAssignableFrom(typeof(TEntity).GetTypeInfo()))
                 {
                     skipIdsExpression = x => !skipIds.Contains(((IWithId<TId>)x).Id);
                 }
