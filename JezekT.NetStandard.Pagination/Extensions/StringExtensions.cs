@@ -15,7 +15,13 @@ namespace JezekT.NetStandard.Pagination.Extensions
             {
                 return new TId[0];
             }
-            return idsString.Split(',').Select(x => (TId)Convert.ChangeType(x, typeof(TId))).ToArray();
+
+            var stringIds = idsString.Split(',');
+            if (typeof(TId) == typeof(Guid))
+            {
+                return stringIds.Select(x => new Guid(x)).OfType<TId>().ToArray();
+            }
+            return stringIds.Select(x => (TId)Convert.ChangeType(x, typeof(TId))).ToArray();
         }
     }
 }
