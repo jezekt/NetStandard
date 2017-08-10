@@ -67,7 +67,7 @@ namespace JezekT.NetStandard.Services.EntityOperations
             return result;
         }
 
-        public async Task<bool> DeleteByIdAsync(TId id)
+        public virtual async Task<bool> DeleteByIdAsync(TId id)
         {
             var result = await _entityDestroyer.DeleteByIdAsync(id);
             if (!result)
