@@ -32,11 +32,19 @@ namespace JezekT.NetStandard.Services.EntityOperations
 
         public async Task<TEntity> GetByIdAsync(TId id)
         {
+            if (_entityProvider == null)
+            {
+                throw new NullReferenceException("Entity provider is null. Make sure it is injected in constructor.");
+            }
             return await _entityProvider.GetByIdAsync(id);
         }
 
         public async Task<TEntity> GetByIdAsync(TId id, params Expression<Func<TEntity, object>>[] includes)
         {
+            if (_entityWithIncludesProvider == null)
+            {
+                throw new NullReferenceException("Entity provider with includes is null. Make sure it is injected in constructor.");
+            }
             return await _entityWithIncludesProvider.GetByIdAsync(id, includes);
         }
 
@@ -46,6 +54,10 @@ namespace JezekT.NetStandard.Services.EntityOperations
             if (obj == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
+            if (_entityWithIncludesProvider == null)
+            {
+                throw new NullReferenceException("Entity creator is null. Make sure it is injected in constructor.");
+            }
             var result = await _entityCreator.CreateAsync(obj);
             if (!result)
             {
@@ -59,6 +71,10 @@ namespace JezekT.NetStandard.Services.EntityOperations
             if (obj == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
+            if (_entityWithIncludesProvider == null)
+            {
+                throw new NullReferenceException("Entity updater is null. Make sure it is injected in constructor.");
+            }
             var result = await _entityUpdater.UpdateAsync(obj);
             if (!result)
             {
@@ -69,6 +85,10 @@ namespace JezekT.NetStandard.Services.EntityOperations
 
         public virtual async Task<bool> DeleteByIdAsync(TId id)
         {
+            if (_entityWithIncludesProvider == null)
+            {
+                throw new NullReferenceException("Entity destroyer is null. Make sure it is injected in constructor.");
+            }
             var result = await _entityDestroyer.DeleteByIdAsync(id);
             if (!result)
             {
@@ -78,13 +98,9 @@ namespace JezekT.NetStandard.Services.EntityOperations
         }
 
 
-        protected CrudWithValidationServiceBase(IProvideItemById<TEntity, TId> entityProvider, IProvideItemByIdWithIncludes<TEntity, TId> entityWithIncludesProvider,
-            ICreateEntityWithValidation<TEntity> entityCreator, IUpdateEntityWithValidation<TEntity> entityUpdater, IDeleteEntityWithValidation<TEntity, TId> entityDestroyer)
+        protected CrudWithValidationServiceBase(IProvideItemById<TEntity, TId> entityProvider = null, IProvideItemByIdWithIncludes<TEntity, TId> entityWithIncludesProvider = null,
+            ICreateEntityWithValidation<TEntity> entityCreator = null, IUpdateEntityWithValidation<TEntity> entityUpdater = null, IDeleteEntityWithValidation<TEntity, TId> entityDestroyer = null)
         {
-            if (entityProvider == null || entityWithIncludesProvider == null || entityCreator == null || 
-                entityUpdater == null || entityDestroyer == null) throw new ArgumentNullException();
-            Contract.EndContractBlock();
-
             _validationErrors = new Dictionary<string, string>();
             _entityProvider = entityProvider;
             _entityWithIncludesProvider = entityWithIncludesProvider;

@@ -15,7 +15,7 @@ namespace JezekT.NetStandard.Services.EntityOperations
             {
                 if (Validation == null) return false;
                 var errors = Validation.GetValidationErrors();
-                return errors != null && Enumerable.Any<KeyValuePair<string, string>>(errors);
+                return errors != null && errors.Any();
             }
         }
 
