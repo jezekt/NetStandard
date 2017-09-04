@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Tomas Jezek</Authors>
     <Company>JezekT</Company>
     <Description>Common types and interfaces for Data layer</Description>
@@ -9,7 +9,7 @@
     <PackageLicenseUrl>https://github.com/jezekt/NetStandard/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/jezekt/NetStandard/tree/master/JezekT.NetStandard.Data</PackageProjectUrl>
     <PackageTags>datalayer netstandard</PackageTags>
-    <Version>1.0.0-beta</Version>
+    <Version>2.0.0-beta</Version>
   </PropertyGroup>
 
   <ItemGroup>
