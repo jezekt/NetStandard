@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Version>2.0.0-beta</Version>
     <Authors>Tomas Jezek</Authors>
     <Company>JezekT</Company>
@@ -13,10 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JezekT.NetStandard.Data" Version="2.0.0-beta" />
-    <PackageReference Include="JezekT.NetStandard.Pagination" Version="2.0.0-beta" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
     <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JezekT.NetStandard.Data\JezekT.NetStandard.Data.csproj" />
+    <ProjectReference Include="..\JezekT.NetStandard.Pagination\JezekT.NetStandard.Pagination.csproj" />
   </ItemGroup>
 
 </Project>
