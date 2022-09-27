@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
@@ -28,7 +27,7 @@ namespace JezekT.NetStandard.Data.EntityFrameworkCore.DataProviders
             {
                 query = includes.Aggregate(query, (current, include) => current.Include(include));
             }
-            return await query.FirstOrDefaultAsync(x => EqualityComparer<TId>.Default.Equals(x.Id, id));
+            return await query.FirstOrDefaultAsync(x => Equals(x.Id, id));
         }
 
 
